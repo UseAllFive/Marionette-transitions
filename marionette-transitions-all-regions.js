@@ -1,4 +1,4 @@
-/* globals jQuery, Marionette */
+/* globals jQuery, Backbone, Marionette */
 /*
 
 ██╗   ██╗███████╗███████╗     █████╗ ██╗     ██╗         ███████╗██╗██╗   ██╗███████╗
@@ -15,10 +15,16 @@ Description: Support for transitions and animations between views in Marionette
 Package URL: https://github.com/UseAllFive/Marionette-transitions
 
 */
-
-(function() {
-
-    'use strict';
+(function(factory){
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery', 'marionette'], factory);
+    }
+    else{
+        // Browser globals
+        factory(jQuery, Backbone.Marionette);
+    }    
+}(function($, Marionette) {    
 
 	Marionette.Region.prototype.open = function(view) {
     	this.$el.hide();
@@ -28,4 +34,4 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
 
     return {};
 
-}());
+}));

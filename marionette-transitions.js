@@ -1,4 +1,4 @@
-/* globals jQuery, Marionette */
+/* globals jQuery, Backbone, Marionette */
 /*
 
 ██╗   ██╗███████╗███████╗     █████╗ ██╗     ██╗         ███████╗██╗██╗   ██╗███████╗
@@ -16,11 +16,18 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
 
 */
 
-(function() {
+(function(factory){
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery', 'marionette'], factory);
+    }
+    else{
+        // Browser globals
+        factory(jQuery, Backbone.Marionette);
+    }    
+}(function($, Marionette) {    
 
-    'use strict';
-
-    FadeInRegion = Backbone.Marionette.Region.extend({
+    Marionette.FadeInRegion = Marionette.Region.extend({
         open: function(view) {
             this.$el.hide();
             this.$el.html(view.el);
@@ -28,7 +35,7 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
         }
     });
 
-    FadeInOutRegion = Backbone.Marionette.Region.extend({
+    Marionette.FadeInOutRegion = Marionette.Region.extend({
         open: function(view) {
             this.$el.fadeOut();
             this.$el.html(view.el);
@@ -38,4 +45,4 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
 
     return {};
 
-}());
+}));
