@@ -1,4 +1,4 @@
-Marionette-transitions
+Marionette-transitions [![Build Status](https://travis-ci.org/UseAllFive/Marionette-transitions.svg?branch=master)](https://travis-ci.org/UseAllFive/Marionette-transitions)
 ======================
 
 Support for transitions and animations in Marionette
