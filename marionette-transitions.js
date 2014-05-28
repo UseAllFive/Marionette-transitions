@@ -44,6 +44,7 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
                 }).bind(this));
             } else {
                 this.$el.data('not_first_load', true)                
+                this.$el.html(view.el);
             }
         }
     });
