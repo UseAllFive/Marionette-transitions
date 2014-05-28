@@ -28,19 +28,19 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
 
     Marionette.FadeInRegion = Marionette.Region.extend({
         open: function(view) {
-            this.$el.hide(1000, function() {
+            this.$el.hide(1000, (function() {
                 this.$el.html(view.el);
                 this.$el.fadeIn();
-            });
+            }).bind(this));
         }
     });
 
     Marionette.FadeInOutRegion = Marionette.Region.extend({
         open: function(view) {
-            this.$el.fadeOut(1000, function() {
+            this.$el.fadeOut(1000, (function() {
                 this.$el.html(view.el);
                 this.$el.fadeIn();
-            });
+            }).bind(this));
         }
     });
 
