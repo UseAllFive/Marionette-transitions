@@ -55,8 +55,8 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
                 this.$el.css({
                     opacity: 0
                 });
-                this.$el.html(view.el);
                 setTimeout((function() {
+                    this.$el.html(view.el);
                     this.$el.css({
                         opacity: 1
                     });
