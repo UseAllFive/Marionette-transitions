@@ -37,10 +37,14 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
 
     Marionette.FadeInOutRegion = Marionette.Region.extend({
         open: function(view) {
-            this.$el.fadeOut(1000, (function() {
-                this.$el.html(view.el);
-                this.$el.fadeIn();
-            }).bind(this));
+            if(this.$el.data('not_first_load')){
+                this.$el.fadeOut(1000, (function() {
+                    this.$el.html(view.el);
+                    this.$el.fadeIn();
+                }).bind(this));
+            } else {
+                this.$el.data('not_first_load', true)                
+            }
         }
     });
 
