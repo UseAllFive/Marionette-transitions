@@ -16,8 +16,16 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
 
 */
 
-Marionette.Region.prototype.open = function(view) {
-    this.$el.hide();
-    this.$el.html(view.el);
-    this.$el.slideDown("slow");
-};
+(function() {
+
+    'use strict';
+
+	Marionette.Region.prototype.open = function(view) {
+    	this.$el.hide();
+    	this.$el.html(view.el);
+    	this.$el.slideDown("slow");
+	};
+
+    return {};
+
+}());
