@@ -1,6 +1,6 @@
 {
   "name": "Marionette-transitions",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Support for transitions and animations between views in Marionette",
   "main": "transitions.js",
   "scripts": {
