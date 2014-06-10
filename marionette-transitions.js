@@ -78,8 +78,8 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
                 this.$el.data('not_first_load', true);              
                 this.$el.html(view.el);
                 this.$el.css({
-                    transition: 'all 0.4s cubic-bezier(0,0, .5, 1)',
-                    '-webkit-transition': 'all 0.4s cubic-bezier(0,0, .5, 1)',
+                    transition: 'opacity 0.4s cubic-bezier(0,0, .5, 1)',
+                    '-webkit-transition': 'opacity 0.4s cubic-bezier(0,0, .5, 1)',
                     opacity: 1
                 });
             }
