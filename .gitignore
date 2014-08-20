@@ -1,1 +1,8 @@
+.editorconfig
+.gitignore
+.jscsrc
+.jshintrc
+.jshintignore
+.npmignore
+.scss-lint.yml
 node_modules
