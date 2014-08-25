@@ -1,0 +1,20 @@
+{
+  "name": "Marionette-transitions",
+  "main": "Marionette-transitions.js",
+  "version": "0.0.12",
+  "homepage": "https://github.com/UseAllFive/Marionette-transitions",
+  "authors": [
+    "Travis Glines <travis@useallfive.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone.marionette": "<=1.8.8"
+  }
+}
