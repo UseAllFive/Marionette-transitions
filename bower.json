@@ -1,7 +1,7 @@
 {
   "name": "Marionette-transitions",
   "main": "Marionette-transitions.js",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "homepage": "https://github.com/UseAllFive/Marionette-transitions",
   "authors": [
     "Travis Glines <travis@useallfive.com>"
