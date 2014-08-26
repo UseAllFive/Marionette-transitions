@@ -112,6 +112,8 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
 
             // Wait for event to get fired after the region is closed.
             this.once('after:fade:out', _.bind(function() {
+                var fadeInView = this.waitingForViewTransition[0];
+
                 // Transition is done.
                 //
                 // Show the new view. This will use the arguments from the
@@ -134,15 +136,15 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
                     preventClose: true
                 }));
 
+                // Remove the waiting state
+                this.waitingForViewTransition = null;
+
                 _.delay(_.bind(function() {
-                    this.waitingForViewTransition[0].triggerMethod('after:fade:in');
+                    fadeInView.triggerMethod('after:fade:in');
 
                     // Regions don't have a `triggerMethod`, so just use
                     // `trigger`.
                     this.trigger('after:fade:in');
-
-                    // Remove the waiting state
-                    this.waitingForViewTransition = null;
                 }, this), this.regionFadeDuration / 2 * 1000);
 
             }, this));
