@@ -94,7 +94,11 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
             // don't need to do anything fancy. Just send to the original
             // function.
             if (!currentView || !$region) {
-                return Marionette.Region.prototype.show.call(this, view, options);
+                Marionette.Region.prototype.show.call(this, view, options);
+                view.triggerMethod('before:fade:in');
+                view.triggerMethod('after:fade:in');
+
+                return;
             }
 
             // Check if we're waiting for another transition. We'll use this
