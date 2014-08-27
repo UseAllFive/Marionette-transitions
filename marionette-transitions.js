@@ -8,6 +8,9 @@
  ╚═════╝ ╚══════╝╚══════╝    ╚═╝  ╚═╝╚══════╝╚══════╝    ╚═╝     ╚═╝  ╚═══╝  ╚══════╝
 
 Author: Travis Glines
+Collaborators:
+- Justin Anastos
+
 Author URI: http://useallfive.com/
 
 Description: Support for transitions and animations between views in Marionette
@@ -75,45 +78,119 @@ Package URL: https://github.com/UseAllFive/Marionette-transitions
     });
 
     Marionette.FadeInOutRegionCSS3 = Marionette.Region.extend({
-        regionFadeDuration: 0.4,
+        // Default fading duration in seconds. This can be overriden by
+        // setting the value when `Marionette.FadeInOutRegionCSS3` is
+        // extended or by setting the value on an instance of
+        // `Marionette.FadeInOutRegionCSS3`.
+        regionFadeDuration: 0.8,
 
-        open: function(view) {
+        // Override the `show` function.
+        show: function(view, options) {
             var $region = this.$el;
-            var fadeDuration = this.regionFadeDuration;
-            var originalTriggerMethod = view.triggerMethod;
+            var alreadyWaiting;
+            var currentView = this.currentView;
 
-            if ($region.data(FIRST_LOAD_DATA_NAME)) {
-                // Intercept all `triggerMethod` calls while the animation
-                // is taking place. This will prevent `show` from being
-                // captured elsewhere. We will restore the function after
-                // the animation and manually fire a `show` event.
-                view.triggerMethod = function(event) {};
+            // See if there is no current view or a region. If so, then we
+            // don't need to do anything fancy. Just send to the original
+            // function.
+            if (!currentView || !$region) {
+                Marionette.Region.prototype.show.call(this, view, options);
+                view.triggerMethod('before:fade:in');
+                view.triggerMethod('after:fade:in');
 
+                return;
+            }
+
+            // Check if we're waiting for another transition. We'll use this
+            // value a few lines down.
+            alreadyWaiting = !!this.waitingForViewTransition;
+
+            // Save what we're waiting for. This will override any old
+            // values, which is the desired behavior.
+            this.waitingForViewTransition = _.toArray(arguments);
+
+            // Bail if we're already waiting
+            if (alreadyWaiting) {
+                return;
+            }
+
+            // Wait for event to get fired after the region is closed.
+            this.once('after:fade:out', _.bind(function() {
+                var fadeInView = this.waitingForViewTransition[0];
+
+                // Transition is done.
+                //
+                // Show the new view. This will use the arguments from the
+                // last time show was called. More can be called between
+                // when the fade out starts and finishes. THis makes sure
+                // that we get the right view to show.
+                //
+                // Fade it back on.
+
+                $region.css({
+                    opacity: 1
+                });
+
+                this.waitingForViewTransition[0].triggerMethod('before:fade:in');
+                this.trigger('before:fade:in');
+
+                // Show the view in the region, but don't close the old one
+                // since we already did that.
+                Marionette.Region.prototype.show.apply(this, this.waitingForViewTransition.concat({
+                    preventClose: true
+                }));
+
+                // Remove the waiting state
+                this.waitingForViewTransition = null;
+
+                _.delay(_.bind(function() {
+                    fadeInView.triggerMethod('after:fade:in');
+
+                    // Regions don't have a `triggerMethod`, so just use
+                    // `trigger`.
+                    this.trigger('after:fade:in');
+                }, this), this.regionFadeDuration / 2 * 1000);
+
+            }, this));
+
+            this.close();
+        },
+
+        close: function(options) {
+            var $region = this.$el;
+
+            // Add opacity transition to the region
+            $region.css(prefix('transition', 'opacity ' + (this.regionFadeDuration / 2) + 's cubic-bezier(0, 0, 0.5, 1)'));
+
+            // Trigger event on region
+            this.trigger('before:fade:out');
+
+            if (this.currentView) {
+                // Trigger event on view
+                this.currentView.triggerMethod('before:fade:out');
+
+                // Fade it out
                 $region.css({
                     opacity: 0
                 });
 
-                _.delay(_.bind(function() {
-                    // Done animating out
-
-                    // Show HTML
-                    $region.html(view.el);
-
-                    // Restore `triggerMethod`
-                    view.triggerMethod = originalTriggerMethod;
-
-                    // Fire `show` event.
-                    view.triggerMethod('show');
-
-                    // Animate back in
-                    $region.css({
-                        opacity: 1
-                    });
-                }, this), fadeDuration * 1000);
+                // When the transition is complete, then call `_fadeOutComplete`.
+                _.delay(_.bind(this._fadeOutComplete, this, arguments), this.regionFadeDuration / 2 * 1000);
             } else {
-                $region.data(FIRST_LOAD_DATA_NAME, true);
-                $region.html(view.el);
-                $region.css(prefix('transition', 'opacity ' + this.regionFadeDuration + 's cubic-bezier(0, 0, 0.5, 1)'));
+                this._fadeOutComplete();
+            }
+        },
+
+        // When the fade out is complete, execute the actual close code and
+        // fire events.
+        _fadeOutComplete: function(args) {
+            // Close the region before events get sent out
+            Marionette.Region.prototype.close.apply(this, args);
+
+            this.trigger('after:fade:out');
+
+            if (this.currentView) {
+                this.currentView.triggerMethod('after:fade:out');
             }
         }
     });
